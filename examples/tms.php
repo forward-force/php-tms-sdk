@@ -13,20 +13,29 @@ $tms = new TMS($token);
 //Get all lineups by postal code
 try {
     $lineups = $tms->lineups()->fetchByZipcode('USA','78701');
-//    var_dump($lineups);
+    var_dump($lineups);
 } catch (GuzzleException $e) {
     var_dump($e->getMessage());
 }
+
+//Get airings for a lineup
+try {
+    $airings = $tms->lineups()->fetchAirings('USA-DTVNOW-DEFAULT', date("c", strtotime('-1 year')), 'Sm');
+    var_dump($airings);
+} catch (GuzzleException $e) {
+    var_dump($e->getMessage());
+}
+
 
 //Get channels for a lineup
 try {
     $channels = $tms->lineups()->fetchChannels('USA-DTVNOW-DEFAULT');
-//    var_dump($channels);
+    var_dump($channels);
 } catch (GuzzleException $e) {
     var_dump($e->getMessage());
 }
 
-//get associated media
+//Get associated media from asset
 try{
     $media = $tms->lineups()->fetchAssetFromMedia($token, 's51307_ll_h3_aa.png');
     var_dump($media);
