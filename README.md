@@ -19,17 +19,6 @@ $tms = new TMS($token); //pv_deec47538d80245234a66e1d14d38be81
 
 ### Examples
 
-Fetch all documents:
-```php
-$tms = new RightSignature($tms);
-
-try {
-    $documents = $rightSignature->documents()->fetch();
-    var_dump($documents);
-} catch (GuzzleException $e) {
-    var_dump($e->getMessage());
-}
-```
 
 Get Lineups by zip code and country (country is optional):
 
