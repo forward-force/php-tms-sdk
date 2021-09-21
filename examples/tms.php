@@ -1,4 +1,5 @@
 <?php
+
 require_once __DIR__ . '../../vendor/autoload.php';
 
 use ForwardForce\TMS\TMS;
@@ -12,7 +13,7 @@ $tms = new TMS($token);
 
 //Get all lineups by postal code
 try {
-    $lineups = $tms->lineups()->fetchByZipcode('USA','78701');
+    $lineups = $tms->lineups()->fetchByZipcode('USA', '78701');
     var_dump($lineups);
 } catch (GuzzleException $e) {
     var_dump($e->getMessage());
@@ -36,11 +37,9 @@ try {
 }
 
 //Get associated media from asset
-try{
+try {
     $media = $tms->lineups()->fetchAssetFromMedia($token, 's51307_ll_h3_aa.png');
     var_dump($media);
 } catch (GuzzleException $e) {
     var_dump($e->getMessage());
 }
-
-
