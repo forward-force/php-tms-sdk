@@ -14,7 +14,7 @@ composer require forward-force/tms-api-sdk
 In order to authenticate, you need to pass the *PRIVATE API TOKEN* like so:
 
 ```
-$tms = new TMS($token); //pv_deec47538d80245234a66e1d14d38be81
+$tms = new TMS($token); 
 ```
 
 ### Examples
