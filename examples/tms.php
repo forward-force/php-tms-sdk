@@ -21,7 +21,7 @@ try {
 
 //Get airings for a lineup
 try {
-    $airings = $tms->lineups()->fetchAirings('USA-DTVNOW-DEFAULT', date("c", strtotime('-1 year')), 'Sm');
+    $airings = $tms->lineups()->fetchAirings('USA-DTVNOW-DEFAULT', date("c", strtotime('-2 days')), 'Sm');
     var_dump($airings);
 } catch (GuzzleException $e) {
     var_dump($e->getMessage());

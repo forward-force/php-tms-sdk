@@ -50,7 +50,8 @@ class Lineup extends HttpClient implements ApiAwareContract
     }
 
     /**
-     * Grab all airing for a lineup filtering by startDateTime(Date/Time to start from (ISO 8601))
+     * Grab tv guide for a lineup filtered by startDateTime(ISO 8601)
+     * startDateTime should be a valid date 14 days prior to the current date
      * @param string $lineup
      * @param string $startDateTime
      * @param string $imageSize
