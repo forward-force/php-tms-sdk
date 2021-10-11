@@ -65,8 +65,33 @@ class Lineup extends HttpClient implements ApiAwareContract
         return $this->get($this->buildQuery('/lineups/' . $lineup . '/grid'));
     }
 
+    /**
+     * @param $apiKey
+     * @param $asset
+     * @return Stream
+     * @throws GuzzleException
+     */
     public function fetchAssetFromMedia($apiKey, $asset): Stream
     {
         return HttpClient::fetchWithMedia($apiKey, $asset);
+    }
+
+    /**
+     * @param string $stationId
+     * @param string $startDateTime
+     * @param string|null $lineupId
+     * @return array
+     * @throws GuzzleException
+     */
+    public function getStationAirings(string $stationId, string $startDateTime, string $lineupId = null): array
+    {
+        $this->addQueryParameter('startDateTime', $startDateTime);
+        if (isset($lineupId)) {
+            $this->addQueryParameter('lineupId', $lineupId);
+        }
+
+//        http://data.tmsapi.com/v1.1/stations/10359/airings?lineupId=USA-TX42500-X&startDateTime=2021-10-11T12%3A00Z&api_key=
+
+        return $this->get($this->buildQuery('/stations/' . $stationId . '/airings'));
     }
 }

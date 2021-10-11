@@ -23,7 +23,7 @@ $tms = new TMS($token);
 Get Lineups by zip code and country (country is optional):
 
 ```php
-$lineups = $tms->lineups()->fetchByZipcode('USA','78701');
+$lineups = $tms->lineups()->************fetchByZipcode('USA','78701');
 ```
 
 Fetch all channels for a lineup:
@@ -43,6 +43,18 @@ Retrieve an image for an asset:
 try{
     $media = $tms->lineups()->fetchAssetFromMedia($token, 's51307_ll_h3_aa.png');
     var_dump($media);
+} catch (GuzzleException $e) {
+    var_dump($e->getMessage());
+}
+
+```
+
+Retrieve airings by station id:
+```php
+
+try {
+    $airingsByStation = $tms->lineups()->getStationAirings('10142', date("c", strtotime('-2 days')));
+    var_dump($airingsByStation);
 } catch (GuzzleException $e) {
     var_dump($e->getMessage());
 }

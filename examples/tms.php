@@ -43,3 +43,11 @@ try {
 } catch (GuzzleException $e) {
     var_dump($e->getMessage());
 }
+
+
+try {
+    $airingsByStation = $tms->lineups()->getStationAirings('10142', date("c", strtotime('-2 days')));
+    var_dump($airingsByStation);
+} catch (GuzzleException $e) {
+    var_dump($e->getMessage());
+}
