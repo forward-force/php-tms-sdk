@@ -23,7 +23,7 @@ $tms = new TMS($token);
 Get Lineups by zip code and country (country is optional):
 
 ```php
-$lineups = $tms->lineups()->************fetchByZipcode('USA','78701');
+$lineups = $tms->lineups()->fetchByZipcode('USA','78701');
 ```
 
 Fetch all channels for a lineup:
