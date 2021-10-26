@@ -2,6 +2,7 @@
 
 namespace ForwardForce\TMS\Entities;
 
+use ErrorException;
 use ForwardForce\TMS\Contracts\ApiAwareContract;
 use ForwardForce\TMS\HttpClient;
 use ForwardForce\TMS\TMS;
@@ -93,5 +94,27 @@ class Lineup extends HttpClient implements ApiAwareContract
 //        http://data.tmsapi.com/v1.1/stations/10359/airings?lineupId=USA-TX42500-X&startDateTime=2021-10-11T12%3A00Z&api_key=
 
         return $this->get($this->buildQuery('/stations/' . $stationId . '/airings'));
+    }
+
+    /**
+     * Returns detailed metadata for any program
+     * (Movie, Show, Episode, or Sports) referred to by a given TMS ID or TMS root ID.
+     * @param string $tmsId
+     * @param string $imageSize
+     * @param string $imageAspectTV
+     * @return array
+     * @throws ErrorException
+     * @throws GuzzleException
+     */
+    public function getPrograms(string $tmsId, string $imageSize = 'Sm', string $imageAspectTV = '3x4'): array
+    {
+        if (!isset($tmsId)) {
+            throw new ErrorException('TMS Id is a required parameter');
+        }
+
+        $this->addQueryParameter('imageSize', $imageSize);
+        $this->addQueryParameter('imageAspectTV', $imageAspectTV);
+
+        return $this->get($this->buildQuery('/programs/' . $tmsId));
     }
 }

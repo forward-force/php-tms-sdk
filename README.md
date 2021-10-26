@@ -61,6 +61,18 @@ try {
 
 ```
 
+Retrieve programs by tms id:
+```php
+
+try {
+    $programsByTmsId = $tms->lineups()->getPrograms('EP001151270163');;
+    var_dump($programsByTmsId);
+} catch (GuzzleException $e) {
+    var_dump($e->getMessage());
+}
+
+```
+
 
 ## Contributions
 

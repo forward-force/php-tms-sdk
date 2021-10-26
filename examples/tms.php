@@ -44,10 +44,18 @@ try {
     var_dump($e->getMessage());
 }
 
-
+//Get Station Airrings by station id and date
 try {
     $airingsByStation = $tms->lineups()->getStationAirings('10142', date("c", strtotime('-2 days')));
     var_dump($airingsByStation);
+} catch (GuzzleException $e) {
+    var_dump($e->getMessage());
+}
+
+//Get Available programs for TMS id
+try {
+    $programsByTMSId = $tms->lineups()->getPrograms('EP001151270163');
+    var_dump($programsByTMSId);
 } catch (GuzzleException $e) {
     var_dump($e->getMessage());
 }
