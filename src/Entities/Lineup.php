@@ -72,9 +72,9 @@ class Lineup extends HttpClient implements ApiAwareContract
      * @return Stream
      * @throws GuzzleException
      */
-    public function fetchAssetFromMedia($apiKey, $asset): Stream
+    public function fetchAssetFromMedia(string $apiKey, string $asset, array $params): Stream
     {
-        return HttpClient::fetchWithMedia($apiKey, $asset);
+        return HttpClient::fetchWithMedia($apiKey, $asset, $params);
     }
 
     /**
@@ -106,15 +106,20 @@ class Lineup extends HttpClient implements ApiAwareContract
      * @throws ErrorException
      * @throws GuzzleException
      */
-    public function getPrograms(string $tmsId, string $imageSize = 'Sm', string $imageAspectTV = '3x4'): array
-    {
+    public function getPrograms(
+        string $tmsId,
+        string $imageSize = 'Sm',
+        string $imageAspectTV = '3x4',
+        string $trim = 'true',
+        string $width = null,
+        string $height = null
+    ): array {
         if (!isset($tmsId)) {
             throw new ErrorException('TMS Id is a required parameter');
         }
 
         $this->addQueryParameter('imageSize', $imageSize);
         $this->addQueryParameter('imageAspectTV', $imageAspectTV);
-
         return $this->get($this->buildQuery('/programs/' . $tmsId));
     }
 }

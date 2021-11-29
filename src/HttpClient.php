@@ -61,7 +61,7 @@ class HttpClient
      * @return \Psr\Http\Message\StreamInterface
      * @throws GuzzleException
      */
-    public static function fetchWithMedia($apiKey, $media): Stream
+    public static function fetchWithMedia(string $apiKey, string $media, array $params): Stream
     {
         $instance = new self($apiKey);
         $instance->client = new Client(
@@ -70,6 +70,15 @@ class HttpClient
             ]
         );
         $instance->addQueryParameter('api_key', $apiKey);
+        if (isset($params['w'])) {
+            $instance->addQueryParameter('w', $params['w']);
+        }
+        if (isset($params['h'])) {
+            $instance->addQueryParameter('h', $params['h']);
+        }
+        if (isset($params['trim'])){
+            $instance->addQueryParameter('trim', $params['trim']);
+        }
         $instance->response = $instance->client->get(
             '/assets/' . $media . '?' . http_build_query($instance->getQueryString()),
         );

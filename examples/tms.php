@@ -11,7 +11,7 @@ $token = getenv('TMS_API_KEY');
 //instance of the TMS client
 $tms = new TMS($token);
 
-//Get all lineups by postal code
+////Get all lineups by postal code
 try {
     $lineups = $tms->lineups()->fetchByZipcode('USA', '78701');
     var_dump($lineups);
@@ -19,7 +19,7 @@ try {
     var_dump($e->getMessage());
 }
 
-//Get airings for a lineup
+////Get airings for a lineup
 try {
     $airings = $tms->lineups()->fetchAirings('USA-DTVNOW-DEFAULT', date("c", strtotime('-2 days')), 'Sm');
     var_dump($airings);
@@ -28,7 +28,7 @@ try {
 }
 
 
-//Get channels for a lineup
+////Get channels for a lineup
 try {
     $channels = $tms->lineups()->fetchChannels('USA-DTVNOW-DEFAULT');
     var_dump($channels);
@@ -36,15 +36,20 @@ try {
     var_dump($e->getMessage());
 }
 
-//Get associated media from asset
+////Get associated media from asset
 try {
-    $media = $tms->lineups()->fetchAssetFromMedia($token, 's51307_ll_h3_aa.png');
+    $params = [
+        'w' => 100,
+        'h' => 100,
+        'trim' => 'true',
+    ];
+    $media = $tms->lineups()->fetchAssetFromMedia($token, 's51307_ll_h3_aa.png',$params);
     var_dump($media);
 } catch (GuzzleException $e) {
     var_dump($e->getMessage());
 }
 
-//Get Station Airrings by station id and date
+////Get Station Airrings by station id and date
 try {
     $airingsByStation = $tms->lineups()->getStationAirings('10142', date("c", strtotime('-2 days')));
     var_dump($airingsByStation);
@@ -54,7 +59,7 @@ try {
 
 //Get Available programs for TMS id
 try {
-    $programsByTMSId = $tms->lineups()->getPrograms('EP001151270163');
+    $programsByTMSId = $tms->lineups()->getPrograms('EP001151270163','Sm');
     var_dump($programsByTMSId);
 } catch (GuzzleException $e) {
     var_dump($e->getMessage());

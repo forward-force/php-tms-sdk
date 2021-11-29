@@ -41,7 +41,12 @@ try {
 Retrieve an image for an asset:
 ```php
 try{
-    $media = $tms->lineups()->fetchAssetFromMedia($token, 's51307_ll_h3_aa.png');
+    $params = [
+        'w' => 100,
+        'h' => 100,
+        'trim' => 'true',
+    ];
+    $media = $tms->lineups()->fetchAssetFromMedia($token, 's51307_ll_h3_aa.png',$params);
     var_dump($media);
 } catch (GuzzleException $e) {
     var_dump($e->getMessage());
