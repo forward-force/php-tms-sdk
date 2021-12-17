@@ -15,8 +15,8 @@ class HttpClient
     use Parametarable;
 
     public const API_VERSION = 'v1.1';
-    public const BASE_URL = 'http://data.tmsapi.com';
-    public const BASE_ASSET_URL = 'http://developer.tmsimg.com';
+    public const BASE_URL = 'https://data.tmsapi.com';
+    public const BASE_ASSET_URL = 'https://gues.tmsimg.com';
 
     public array $defaults = [
         'expires_in' => 30
