@@ -2,6 +2,7 @@
 
 namespace ForwardForce\TMS\Entities;
 
+use Carbon\Carbon;
 use ErrorException;
 use ForwardForce\TMS\Contracts\ApiAwareContract;
 use ForwardForce\TMS\HttpClient;
@@ -12,6 +13,10 @@ use GuzzleHttp\Psr7\Stream;
 /** @psalm-suppress PropertyNotSetInConstructor */
 class Lineup extends HttpClient implements ApiAwareContract
 {
+    /* Default image size defined by the TMS API for Lineup Airings(TV Grid) */
+    public const DEFAULT_IMAGE_SIZE = 'Md';
+
+
     /**
      * Fetch all lineups by country and zip code
      *
@@ -53,15 +58,26 @@ class Lineup extends HttpClient implements ApiAwareContract
     /**
      * Grab tv guide for a lineup filtered by startDateTime(ISO 8601)
      * startDateTime should be a valid date 14 days prior to the current date
-     * @param string $lineup
-     * @param string $startDateTime
-     * @param string $imageSize
+     * 
+     * @param string $lineup Lineup ID
+     * @param string $startDateTime Date/Time to start from (ISO 8601)
+     * @param string $endDateTime Date/Time to end on (ISO 8601). Defaults to startDateTime plus three hours.
+     * @param string $imageSize Size of the image referenced by the preferred image URI returned. The default value is Md (medium)
+     * 
      * @throws GuzzleException
      */
-    public function fetchAirings(string $lineup, string $startDateTime, string $imageSize): array
+    public function fetchAirings(string $lineup, string $startDateTime, string $endDateTime = '', string $imageSize = self::DEFAULT_IMAGE_SIZE): array
     {
         $this->addQueryParameter('imageSize', $imageSize);
         $this->addQueryParameter('startDateTime', $startDateTime);
+
+        if (!$endDateTime) { //* set end time 3 hours from start date - if not specified
+            $endDateTime = Carbon::create($startDateTime)
+                ->addHours(3)
+                ->toIso8601String();
+        }
+
+        $this->addQueryParameter('endDateTime', $endDateTime);
 
         return $this->get($this->buildQuery('/lineups/' . $lineup . '/grid'));
     }
