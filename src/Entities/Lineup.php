@@ -58,12 +58,12 @@ class Lineup extends HttpClient implements ApiAwareContract
     /**
      * Grab tv guide for a lineup filtered by startDateTime(ISO 8601)
      * startDateTime should be a valid date 14 days prior to the current date
-     * 
+     *
      * @param string $lineup Lineup ID
      * @param string $startDateTime Date/Time to start from (ISO 8601)
      * @param string $endDateTime Date/Time to end on (ISO 8601). Defaults to startDateTime plus three hours.
      * @param string $imageSize Size of the image referenced by the preferred image URI returned. The default value is Md (medium)
-     * 
+     *
      * @throws GuzzleException
      */
     public function fetchAirings(string $lineup, string $startDateTime, string $endDateTime = '', string $imageSize = self::DEFAULT_IMAGE_SIZE): array
@@ -137,5 +137,29 @@ class Lineup extends HttpClient implements ApiAwareContract
         $this->addQueryParameter('imageSize', $imageSize);
         $this->addQueryParameter('imageAspectTV', $imageAspectTV);
         return $this->get($this->buildQuery('/programs/' . $tmsId));
+    }
+
+    /**
+     * Returns all available images associated with a program.
+     *
+     * @param string $tmsId
+     * @param string $imageSize
+     * @param string $imageAspectTV
+     *
+     * @return array
+     *
+     * @throws ErrorException
+     * @throws GuzzleException
+     */
+    public function getProgramImages(string $tmsId, string $imageSize = '', string $imageAspectTV = ''): array
+    {
+        if (!isset($tmsId)) {
+            throw new ErrorException('Program TMS ID is a required parameter');
+        }
+
+        $this->addQueryParameter('imageSize', $imageSize);
+        $this->addQueryParameter('imageAspectTV', $imageAspectTV);
+
+        return $this->get($this->buildQuery('/programs/' . $tmsId . '/images'));
     }
 }
