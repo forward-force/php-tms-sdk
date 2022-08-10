@@ -94,20 +94,29 @@ class Lineup extends HttpClient implements ApiAwareContract
     }
 
     /**
-     * @param string $stationId
-     * @param string $startDateTime
-     * @param string|null $lineupId
+     * Returns airings schedule and associated program metadata for a single station for a
+     * given time period over the next 14 days.
+     * 
+     * @param string $stationId A station ID
+     * @param string $startDateTime Date/Time to start from (ISO 8601)
+     * @param string|null $endDateTime Date/Time to end on (ISO 8601). Defaults to startDateTime plus three hours.
+     * @param string|null $lineupId The Lineup ID(optional). If not provided, channel numbers will not be included in the response.
+     * 
      * @return array
+     * 
      * @throws GuzzleException
      */
-    public function getStationAirings(string $stationId, string $startDateTime, string $lineupId = null): array
+    public function getStationAirings(string $stationId, string $startDateTime, ?string $endDateTime = '', ?string $lineupId = ''): array
     {
         $this->addQueryParameter('startDateTime', $startDateTime);
+
+        if ($endDateTime) {
+            $this->addQueryParameter('endDateTime', $endDateTime);
+        }
+        
         if (isset($lineupId)) {
             $this->addQueryParameter('lineupId', $lineupId);
         }
-
-//        http://data.tmsapi.com/v1.1/stations/10359/airings?lineupId=USA-TX42500-X&startDateTime=2021-10-11T12%3A00Z&api_key=
 
         return $this->get($this->buildQuery('/stations/' . $stationId . '/airings'));
     }
