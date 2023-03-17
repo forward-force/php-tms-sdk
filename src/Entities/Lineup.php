@@ -122,6 +122,29 @@ class Lineup extends HttpClient implements ApiAwareContract
     }
 
     /**
+     * Returns details for a single station. *Available with R&D/Commercial plans only
+     *
+     * @param string $stationId The station ID
+     * @param string|null $lineupId The Lineup ID(optional). If not provided, channel numbers will not be included in the response.
+     * @param string $imageSize Size of the image referenced by the preferred image URI returned.
+     *                          The default value is Md (medium). Only small and medium logos available for stations.
+     *
+     * @return array
+     *
+     * @throws GuzzleException
+     */
+    public function getStationDetails(string $stationId, ?string $lineupId = '', string $imageSize = 'Md'): array
+    {
+        if ($lineupId) {
+            $this->addQueryParameter('lineupId', $lineupId);
+        }
+
+        $this->addQueryParameter('imageSize', $imageSize);
+
+        return $this->get($this->buildQuery('/stations/' . $stationId));
+    }
+
+    /**
      * Returns detailed metadata for any program
      * (Movie, Show, Episode, or Sports) referred to by a given TMS ID or TMS root ID.
      * @param string $tmsId
