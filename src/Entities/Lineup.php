@@ -5,6 +5,9 @@ namespace ForwardForce\TMS\Entities;
 use Carbon\Carbon;
 use ErrorException;
 use ForwardForce\TMS\Contracts\ApiAwareContract;
+use ForwardForce\TMS\Entities\Enum\SearchableResource;
+use ForwardForce\TMS\Exception\InvalidParameterException;
+use ForwardForce\TMS\Exception\InvalidSearchableFieldException;
 use ForwardForce\TMS\HttpClient;
 use ForwardForce\TMS\TMS;
 use GuzzleHttp\Exception\GuzzleException;
@@ -193,5 +196,46 @@ class Lineup extends HttpClient implements ApiAwareContract
         $this->addQueryParameter('imageAspectTV', $imageAspectTV);
 
         return $this->get($this->buildQuery('/programs/' . $tmsId . '/images'));
+    }
+
+    public function search(
+        SearchableResource $searchable,
+        string $query,
+        array $fields = [],
+        array $params = [],
+        ?int $limit = null,
+        ?int $offset = null,
+    ): array {
+        $this->addQueryParameter('q', $query);
+        
+        if ($fields) {
+            if (array_diff($fields, $searchable->searchableFields()) > 0) {
+                throw new InvalidSearchableFieldException();
+            }
+
+            $this->addQueryParameter('queryFields', implode(',', $fields));
+        }
+        
+        if ($params) {
+            $ivalidParameters = array_diff(array_keys($params), $searchable->allowedParameters());
+
+            if ($ivalidParameters > 0) {
+                throw new InvalidParameterException('Invalid search parameters - ');
+            }
+
+            foreach ($params as $name => $value) {
+                $this->addQueryParameter($name, $value);
+            }
+        }
+
+        if ($limit) {
+            $this->addQueryParameter('limit', $limit);
+            
+            if ($offset) {
+                $this->addQueryParameter('offset', $offset);
+            }
+        }
+
+        return $this->get($this->buildQuery($searchable->value . '/search'));
     }
 }
