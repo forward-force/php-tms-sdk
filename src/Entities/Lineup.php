@@ -209,7 +209,9 @@ class Lineup extends HttpClient implements ApiAwareContract
         $this->addQueryParameter('q', $query);
         
         if ($fields) {
-            if (array_diff($fields, $searchable->searchableFields()) > 0) {
+            $unknownFields = array_diff($fields, $searchable->searchableFields());
+            
+            if ($unknownFields) {
                 throw new InvalidSearchableFieldException();
             }
 
@@ -219,7 +221,7 @@ class Lineup extends HttpClient implements ApiAwareContract
         if ($params) {
             $ivalidParameters = array_diff(array_keys($params), $searchable->allowedParameters());
 
-            if ($ivalidParameters > 0) {
+            if ($ivalidParameters) {
                 throw new InvalidParameterException('Invalid search parameters - ');
             }
 
