@@ -4,7 +4,20 @@ namespace ForwardForce\TMS\Entities\Enum;
 
 enum SearchableResource: string
 {
+    /**
+     * TMS API "Program" object
+     * 
+     * - allowedParameters: `descriptionLang`, `entityType`, `genres`, `imageSize`, `includeAdult`, `subType`, `titleLang`, `startDateTime`, `endDateTime`,
+     * - searchableFields: `title`, `cast`, `genres`, `directors`
+     */
     case PROGRAM = 'programs';
+
+    /**
+     * TMS API "Station" object
+     * 
+     * - allowedParameters: `imageSize`
+     * - searchableFields: `callsign`, `name`
+     */
     case STATION = 'stations';
 
 
