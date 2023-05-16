@@ -210,7 +210,7 @@ class Lineup extends HttpClient implements ApiAwareContract
         
         if ($fields) {
             $unknownFields = array_diff($fields, $searchable->searchableFields());
-            
+
             if ($unknownFields) {
                 throw new InvalidSearchableFieldException();
             }
@@ -238,6 +238,6 @@ class Lineup extends HttpClient implements ApiAwareContract
             }
         }
 
-        return $this->get($this->buildQuery($searchable->value . '/search'));
+        return $this->get($this->buildQuery('/' . $searchable->value . '/search'));
     }
 }
