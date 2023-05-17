@@ -5,6 +5,9 @@ namespace ForwardForce\TMS\Entities;
 use Carbon\Carbon;
 use ErrorException;
 use ForwardForce\TMS\Contracts\ApiAwareContract;
+use ForwardForce\TMS\Entities\Enum\SearchableResource;
+use ForwardForce\TMS\Exception\InvalidParameterException;
+use ForwardForce\TMS\Exception\InvalidSearchableFieldException;
 use ForwardForce\TMS\HttpClient;
 use ForwardForce\TMS\TMS;
 use GuzzleHttp\Exception\GuzzleException;
@@ -193,5 +196,69 @@ class Lineup extends HttpClient implements ApiAwareContract
         $this->addQueryParameter('imageAspectTV', $imageAspectTV);
 
         return $this->get($this->buildQuery('/programs/' . $tmsId . '/images'));
+    }
+
+    /**
+     * Searchs TMS API for a given resource with the provided query
+     *
+     * @param SearchableResource $searchable    A TMS object that exposes a `search` endpoint
+     * @param string $query                     The search query string
+     * @param array $fields                     An array of fields to run the search query against(refer to `$searchable`'s `searchableFields`)
+     * @param array $params                     Search query parameters(refer to `$searchable`'s `allowedParameters` for a list of supported parameters)
+     * @param int|null $limit                   The maximum number of results to be returned from the query. Valid values are between 1 and 50. Default is 10
+     * @param int|null $offset                  Zero-based offset index on the result set. Used in conjunction with limit to page through results.
+     *                                           For example, offset=10 will set response data to begin with 11th hit.
+     *
+     * @return array
+     */
+    public function search(
+        SearchableResource $searchable,
+        string $query,
+        array $fields = [],
+        array $params = [],
+        ?int $limit = null,
+        ?int $offset = null,
+    ): array {
+        $this->addQueryParameter('q', $query);
+        
+        if ($fields) {
+            $unknownFields = array_diff($fields, $searchable->searchableFields());
+
+            if ($unknownFields) {
+                throw new InvalidSearchableFieldException(
+                    sprintf(
+                        'Unknown fields "%s" provided for resource "%s".',
+                        implode(',', $unknownFields),
+                        $searchable->value,
+                    )
+                );
+            }
+
+            $this->addQueryParameter('queryFields', implode(',', $fields));
+        }
+        
+        if ($params) {
+            $ivalidParameters = array_diff(array_keys($params), $searchable->allowedParameters());
+
+            if ($ivalidParameters) {
+                throw new InvalidParameterException(
+                    sprintf('Invalid search parameters: %s'), implode(',', $ivalidParameters)
+                );
+            }
+
+            foreach ($params as $name => $value) {
+                $this->addQueryParameter($name, $value);
+            }
+        }
+
+        if ($limit) {
+            $this->addQueryParameter('limit', $limit);
+            
+            if ($offset) {
+                $this->addQueryParameter('offset', $offset);
+            }
+        }
+
+        return $this->get($this->buildQuery('/' . $searchable->value . '/search'));
     }
 }
